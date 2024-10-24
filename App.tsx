@@ -13,8 +13,8 @@ import {
   useColorScheme,
 } from 'react-native';
 
-import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
-import AudioRecorder from './audio-recording';
+import { Colors, Header } from 'react-native/Libraries/NewAppScreen';
+import MyComponent from './MyComponent';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -34,7 +34,8 @@ function App(): React.JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
         <Header />
-        <AudioRecorder />
+        {/* <AudioRecorder /> */}
+         <MyComponent />
       </ScrollView>
     </SafeAreaView>
   );

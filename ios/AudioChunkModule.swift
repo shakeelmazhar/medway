@@ -61,11 +61,20 @@ class AudioChunkModule: RCTEventEmitter {
         timer?.invalidate()
     }
 
+    // List of events that this module sends to JavaScript
     override func supportedEvents() -> [String]! {
         return ["AudioChunkCaptured"]
     }
 
+    // Required for event emitter in React Native
     override static func requiresMainQueueSetup() -> Bool {
         return true
     }
+
+    @objc
+    override init() {
+        super.init()
+        print("AudioChunkModule initialized")
+    }
 }
+

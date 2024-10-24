@@ -1,24 +1,27 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   Alert,
   Button,
-  NativeEventEmitter,
   NativeModules,
   PermissionsAndroid,
   Platform,
-  View,
+  View
 } from 'react-native';
-import {check, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
+import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 
-const {AudioChunkModule} = NativeModules;
-const audioChunkEmitter = new NativeEventEmitter(AudioChunkModule);
+const { SimpleModule } = NativeModules;
+console.debug("NativeModules: ", NativeModules);
+
+// SimpleModule.testNativeMethod();  // Call the method
+// SimpleModule.showMessage("Hello from JavaScript!");
+// Native Event Emitter to listen to events
+// const audioChunkEmitter = new NativeEventEmitter(AudioChunkModule);
 
 const requestAudioPermissions = async () => {
   if (Platform.OS === 'android') {
     const permission = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
     );
-
     const storagePermission = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
     );
@@ -28,7 +31,6 @@ const requestAudioPermissions = async () => {
       storagePermission === PermissionsAndroid.RESULTS.GRANTED
     );
   } else {
-    // For iOS, check and request permission
     const result = await check(PERMISSIONS.IOS.MICROPHONE);
     if (result === RESULTS.GRANTED) {
       return true;
@@ -40,36 +42,35 @@ const requestAudioPermissions = async () => {
 };
 
 const AudioRecorder = () => {
-  console.debug('AudioRecorder');
-  useEffect(() => {
-    const subscription = audioChunkEmitter.addListener(
-      'AudioChunkCaptured',
-      data => {
-        console.log('Audio chunk captured:', data.filePath);
-        Alert.alert('Audio chunk captured', data.filePath);
-      },
-    );
+  // useEffect(() => {
+  //   const subscription = audioChunkEmitter.addListener(
+  //     'AudioChunkCaptured',
+  //     (data) => {
+  //       console.log('Audio chunk captured:', data.filePath);
+  //       Alert.alert('Audio chunk captured', data.filePath);
+  //     }
+  //   );
 
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+  //   return () => {
+  //     subscription.remove(); // Clean up the listener
+  //   };
+  // }, []);
 
   const startRecording = async () => {
     const hasPermission = await requestAudioPermissions();
     if (hasPermission) {
-      const fileName = `audio_${Date.now()}.m4a`; // Use appropriate file path
-      AudioChunkModule.startRecording(fileName);
+      const fileName = `audio_${Date.now()}.m4a`; // Define your file name
+      // AudioChunkModule.startRecording(fileName); // Call native method
     } else {
       Alert.alert(
         'Permission Denied',
-        'Microphone access is required to record audio.',
+        'Microphone access is required to record audio.'
       );
     }
   };
 
   const stopRecording = () => {
-    AudioChunkModule.stopRecording();
+    // AudioChunkModule.stopRecording(); // Call native stop method
   };
 
   return (
